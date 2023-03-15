@@ -58,9 +58,6 @@ export const getAllArticles = async (req, res) => {
 //route  localhost:5000/articles/update-article
 //method POST
 export const updateArticle = async (req, res) => {
-	// console.log(req.params.id);
-	// console.log(req.body);
-	// console.log(typeof(req.params.id), "type");
 	const id = parseInt(req.params.id);
 
 	const updates = req.body;
@@ -95,5 +92,18 @@ export const deleteArticle = async(req,res)=>{
     } catch (error) {
         console.log(error);
         res.status(500).json({error:error.message})
+    }
+}
+
+export const getArticleBasedOnCategory = async(req,res)=>{
+    console.log(req.params.category);
+    const sql = "SELECT * FROM articles WHERE categories = ?"
+
+    try {
+        const [article] = await db.query(sql,[req.params.category])
+        console.log(article[0]);
+        res.status(200).json(article[0])
+    } catch (error) {
+        console.log(error);
     }
 }

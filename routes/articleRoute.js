@@ -3,6 +3,7 @@ import {
 	addArticle,
 	deleteArticle,
 	getAllArticles,
+	getArticleBasedOnCategory,
 	updateArticle
 } from "../controllers/articleController.js";
 import { upload } from "../utils/multer.js";
@@ -20,5 +21,6 @@ router.post(
 );
 router.put("/update-article/:id", updateArticle);
 router.delete("/delete-article/:id", deleteArticle);
+router.get("/get-article/:category",getArticleBasedOnCategory)
 
 export default router;
