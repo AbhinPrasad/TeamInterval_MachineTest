@@ -58,24 +58,24 @@ export const getAllArticles = async (req, res) => {
 //route  localhost:5000/articles/update-article
 //method POST
 export const updateArticle = async (req, res) => {
-	console.log(req.params.id);
+	// console.log(req.params.id);
 	// console.log(req.body);
+	// console.log(typeof(req.params.id), "type");
 	const id = parseInt(req.params.id);
-	console.log(typeof req.params.id, "type");
 
 	const updates = req.body;
 	const updateFields = [];
 	const updateValues = [];
-	const sql = `UPDATE articles SET ${updateFields.join(
-		", "
-	)} WHERE article_id = ?`;
-	console.log(sql, "sql");
 	for (let field in updates) {
 		updateFields.push(`${field} = ?`);
 		updateValues.push(updates[field]);
 	}
 	console.log(updateFields);
 	console.log(updateValues);
+    console.log("before");
+	const sql = `UPDATE articles SET ${updateFields.join(
+		", "
+	)} WHERE article_id = ?`;
 
 	try {
 		const [article] = await db.query(sql, [id]);
@@ -84,3 +84,16 @@ export const updateArticle = async (req, res) => {
 		console.log(error);
 	}
 };
+
+export const deleteArticle = async(req,res)=>{
+    console.log(req.params.id);
+    const id = parseInt(req.params.id)
+    const sql = "DELETE FROM articles WHERE article_id = ? LIMIT 1"
+    try {
+        const remove = await db.query(sql,[id])
+        res.status(200).json({message:"deleted successfully"})
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:error.message})
+    }
+}

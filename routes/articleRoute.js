@@ -1,8 +1,9 @@
 import express from "express";
 import {
 	addArticle,
+	deleteArticle,
 	getAllArticles,
-    updateArticle
+	updateArticle
 } from "../controllers/articleController.js";
 import { upload } from "../utils/multer.js";
 
@@ -17,7 +18,7 @@ router.post(
 	]),
 	addArticle
 );
-router.put("/update-article/:id",updateArticle)
-
+router.put("/update-article/:id", updateArticle);
+router.delete("/delete-article/:id", deleteArticle);
 
 export default router;
