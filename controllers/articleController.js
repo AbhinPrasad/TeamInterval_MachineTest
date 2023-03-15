@@ -59,51 +59,54 @@ export const getAllArticles = async (req, res) => {
 //method POST
 export const updateArticle = async (req, res) => {
 	const id = parseInt(req.params.id);
+	const columnData = req.body;
 
-	const updates = req.body;
-	const updateFields = [];
-	const updateValues = [];
-	for (let field in updates) {
-		updateFields.push(`${field} = ?`);
-		updateValues.push(updates[field]);
-	}
-	console.log(updateFields);
-	console.log(updateValues);
-    console.log("before");
-	const sql = `UPDATE articles SET ${updateFields.join(
-		", "
-	)} WHERE article_id = ?`;
+	let sql = "UPDATE articles SET ";
+	let values = [];
+
+	Object.keys(columnData).forEach((columnName, index) => {
+		if (index > 0) {
+			sql += ", ";
+		}
+		sql += `${columnName} = ?`;
+		values.push(columnData[columnName]);
+	});
+
+	sql += " WHERE article_id = ?";
+	values.push(id);
 
 	try {
-		const [article] = await db.query(sql, [id]);
-		console.log(article, "article");
+		const updated = await db.query(sql, values);
+		res.status(200).json({ message: "data updated successfully" });
 	} catch (error) {
 		console.log(error);
+		res.status(500).json(error);
 	}
 };
 
-export const deleteArticle = async(req,res)=>{
-    console.log(req.params.id);
-    const id = parseInt(req.params.id)
-    const sql = "DELETE FROM articles WHERE article_id = ? LIMIT 1"
-    try {
-        const remove = await db.query(sql,[id])
-        res.status(200).json({message:"deleted successfully"})
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({error:error.message})
-    }
-}
+export const deleteArticle = async (req, res) => {
+	console.log(req.params.id);
+	const id = parseInt(req.params.id);
+	const sql = "DELETE FROM articles WHERE article_id = ? LIMIT 1";
+	try {
+		const remove = await db.query(sql, [id]);
+		res.status(200).json({ message: "deleted successfully" });
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({ error: error.message });
+	}
+};
 
-export const getArticleBasedOnCategory = async(req,res)=>{
-    console.log(req.params.category);
-    const sql = "SELECT * FROM articles WHERE categories = ?"
+export const getArticleBasedOnCategory = async (req, res) => {
+	console.log(req.params.category);
+	const sql = "SELECT * FROM articles WHERE categories = ?";
 
-    try {
-        const [article] = await db.query(sql,[req.params.category])
-        console.log(article[0]);
-        res.status(200).json(article[0])
-    } catch (error) {
-        console.log(error);
-    }
-}
+	try {
+		const [article] = await db.query(sql, [req.params.category]);
+		console.log(article[0]);
+		res.status(200).json(article[0]);
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({ error: error.message });
+	}
+};
