@@ -39,3 +39,15 @@ export const addArticle = async (req, res) => {
 		console.log(error);
 	}
 };
+
+export const getAllArticles = async (req, res) => {
+	const sql = "SELECT * FROM articles";
+	try {
+		const [articles] = await db.query(sql);
+		console.log(articles);
+		res.status(200).json(articles);
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({ error: error.message });
+	}
+};
