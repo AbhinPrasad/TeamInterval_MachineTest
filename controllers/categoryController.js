@@ -30,12 +30,15 @@ export const addCategory = async (req, res) => {
 	}
 };
 
+//Get all category
+//route  localhost:5000/category
+//method GET
 export const getAllCategory = async(req,res)=>{
     const sql = "SELECT category_name FROM category"
 
     try {
         const [categories] = await db.query(sql)
-        console.log(categories);
+        // console.log(categories);
         if(categories.length){
             res.status(200).json(categories)
         }else{
