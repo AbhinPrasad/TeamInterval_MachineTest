@@ -4,10 +4,9 @@ import { upload } from "../utils/multer.js";
 
 const router = express.Router();
 
-router.get("/")
-// router.post("/add-article",addArticle)
+router.get("/");
 router.post(
-	"/articles/add-article",
+	"/add-article",
 	upload.fields([
 		{ name: "thumbnail", maxCount: 1 },
 		{ name: "featured", maxCount: 1 }
