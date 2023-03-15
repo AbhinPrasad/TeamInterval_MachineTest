@@ -1,11 +1,10 @@
 import { db } from "../config/db.js";
 import cloudinary from "../utils/cloudinary.js";
 
+//Add article
+//route  localhost:5000/articles/add-article
+//method POST
 export const addArticle = async (req, res) => {
-	// console.log(req.file,"file");
-	// console.log(req.files["thumbnail"][0]);
-	// console.log(req.files['featured'][0]);
-	// console.log(req.body,"body");
 	const { heading, readTime, description, categories, status } = req.body;
 	const thumbnail = req.files["thumbnail"][0];
 	const featured = req.files["featured"][0];
@@ -25,7 +24,7 @@ export const addArticle = async (req, res) => {
 			featuredResult.url,
 			status
 		]);
-		console.log(addArticle, "addArticle");
+
 		res.status(201).json({
 			heading,
 			readTime,
@@ -40,6 +39,9 @@ export const addArticle = async (req, res) => {
 	}
 };
 
+//get all articles
+//route  localhost:5000/articles
+//method GET
 export const getAllArticles = async (req, res) => {
 	const sql = "SELECT * FROM articles";
 	try {
@@ -49,5 +51,36 @@ export const getAllArticles = async (req, res) => {
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({ error: error.message });
+	}
+};
+
+//Update article
+//route  localhost:5000/articles/update-article
+//method POST
+export const updateArticle = async (req, res) => {
+	console.log(req.params.id);
+	// console.log(req.body);
+	const id = parseInt(req.params.id);
+	console.log(typeof req.params.id, "type");
+
+	const updates = req.body;
+	const updateFields = [];
+	const updateValues = [];
+	const sql = `UPDATE articles SET ${updateFields.join(
+		", "
+	)} WHERE article_id = ?`;
+	console.log(sql, "sql");
+	for (let field in updates) {
+		updateFields.push(`${field} = ?`);
+		updateValues.push(updates[field]);
+	}
+	console.log(updateFields);
+	console.log(updateValues);
+
+	try {
+		const [article] = await db.query(sql, [id]);
+		console.log(article, "article");
+	} catch (error) {
+		console.log(error);
 	}
 };
